@@ -24,7 +24,7 @@ changelog=2023/01/06 0.1 Initial release
 # Tags are comma separated with spaces allowed
 tags=python,project,metadata
 
-homepage=http://homepage
+homepage=https://github.com/sigdeletras/project-reports-qgis-plugin
 category=Plugins
 icon=icon.png
 # experimental flag
