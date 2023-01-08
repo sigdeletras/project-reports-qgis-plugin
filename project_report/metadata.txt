@@ -5,11 +5,11 @@
 [general]
 name=Project Reports
 qgisMinimumVersion=3.0
-description=Plugin to generate reports of properties and metadata about layers, fields and layouts of QGIS projects in different formats.
-version=0.1
+description=Plugin to generate reports (CSV and HTML) of properties and metadata about layers, fields and layouts of QGIS projects.
+version=1.0
 author=Patricio Soriano. SIGdeletras.com
 email=pasoiano@gmail.com
-about=This plugin collects information and properties from different PyQGIS objects such as layers, fields or layouts accessible from the project and generates open data files.
+about=This plugin collects information and properties from different PyQGIS objects, such as layers, fields or layouts accessible from the project and generates open data files (CSV and HTML) with this information. The main objective is to have a tool to generate final reports on work done with QGIS..
 
 tracker=https://github.com/sigdeletras/project-reports-qgis-plugin/issues
 repository=https://github.com/sigdeletras/project-reports-qgis-plugin
@@ -19,10 +19,12 @@ repository=https://github.com/sigdeletras/project-reports-qgis-plugin
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-changelog=2023/01/06 0.1 Initial release
+changelog=2023/01/08 1.0 HTML output option. Check the options selected in the GUI and update the state of the "Create Report"
+        button.
+    2023/01/06 0.1 Initial release
 
 # Tags are comma separated with spaces allowed
-tags=python,project,metadata
+tags=project,metadata,report
 
 homepage=https://github.com/sigdeletras/project-reports-qgis-plugin
 category=Plugins
@@ -43,4 +45,3 @@ Category of the plugin: Raster, Vector, Database or Web
 
 # If the plugin can run on QGIS Server.
 server=False
-

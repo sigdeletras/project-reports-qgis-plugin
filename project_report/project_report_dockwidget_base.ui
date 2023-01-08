@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>377</height>
+    <width>305</width>
+    <height>340</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Project Reports</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -24,25 +24,29 @@
        <attribute name="title">
         <string>Options</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QLabel" name="lb_folder">
-            <property name="text">
-             <string>Output directory</string>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QLabel" name="lb_folder">
+              <property name="text">
+               <string>Output directory</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QgsFileWidget" name="directoryWidget">
+              <property name="storageMode">
+               <enum>QgsFileWidget::GetDirectory</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QgsFileWidget" name="directoryWidget">
-            <property name="storageMode">
-             <enum>QgsFileWidget::GetDirectory</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox">
+           <widget class="QGroupBox" name="group_objects">
             <property name="title">
              <string>Objects</string>
             </property>
@@ -74,6 +78,33 @@
                 <string>Layouts</string>
                </property>
               </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="group_output">
+            <property name="title">
+             <string>Output formats</string>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QCheckBox" name="check_csv">
+                 <property name="text">
+                  <string>CSV</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="check_html">
+                 <property name="text">
+                  <string>HTML</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
