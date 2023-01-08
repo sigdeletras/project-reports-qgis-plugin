@@ -10,6 +10,9 @@ This plugin collects information and properties from different PyQGIS objects, s
 
 Project reports QGIS Plugin is available in QGIS Official Plugin Repository. For install just open QGIS, select Plugins -> Manage and Install Plugins and search for the plugin.
 
+![image](https://user-images.githubusercontent.com/4746157/211209142-df602460-01be-42df-98e4-b0bb9211df73.png)
+
+
 In case of manual installation, you can clone this repository latest release, unzip it into zip directory and enable plugin under QGIS Installed Plugins.
 
 ## Usage
@@ -31,7 +34,10 @@ After clicking on the Create Reports button the generated files will be availabl
 - CVS
 - HMTL (with CSS)
 
-It is possible to customize the CSS style sheet of the HTML by editing the existing CSS variable in the file
+It is possible to customize the CSS style sheet of the HTML by editing the existing CSS variable in the class file (QProjectReport.py)
+
+![image](https://user-images.githubusercontent.com/4746157/211209086-a60984cf-5bb9-4415-9977-aa919f83f567.png)
+
 
 ## Information about QGIS objects
 
