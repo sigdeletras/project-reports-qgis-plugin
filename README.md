@@ -22,8 +22,8 @@ After installing the plugin it will be accessible from the Plugin menu and in th
 When clicking on the tool, a side panel will appear with the different options of the plugin:
 
 - Output directory
-- Output options (CSV and HTML)
-- Report objects.
+- Objects.
+- Output formats (CSV and HTML)
 
 ![image](https://user-images.githubusercontent.com/4746157/211208664-d3b716d4-957d-42e4-8666-7b08f23b88b8.png)
 
@@ -38,10 +38,9 @@ It is possible to customize the CSS style sheet of the HTML by editing the exist
 
 ![image](https://user-images.githubusercontent.com/4746157/211209086-a60984cf-5bb9-4415-9977-aa919f83f567.png)
 
-
 ## Information about QGIS objects
 
-## Project
+### Project
 
 Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsProject.html#module-QgsProject)
 
@@ -53,7 +52,7 @@ Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsProject.ht
 - 'creationDate': The date when the project was created
 - 'lastSaveDate': The date when the project was last saved
 
-## Layers
+### Layers
 
 Main PyQGIS class [QgsVectorLayer]([https://qgis.org/pyqgis/master/core/QgsProject.html#module-QgsProject](https://qgis.org/pyqgis/master/core/QgsVectorLayer.html#module-QgsVectorLayer)) and [QgsRasterLayer](https://qgis.org/pyqgis/master/core/QgsRasterLayer.html#module-QgsRasterLayer))
 
@@ -65,7 +64,7 @@ Main PyQGIS class [QgsVectorLayer]([https://qgis.org/pyqgis/master/core/QgsProje
 - 'geometry_type': Returns point, line or polygon
 - 'features_count': Number of features rendered with specified legend key.
 
-## Fields
+### Fields
 
 Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsFields.html#module-QgsFields)
 
@@ -77,7 +76,7 @@ Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsFields.htm
 - "type": Field type (e.g., char, varchar, text, int, serial, double).
 - "length": Field length
 
-## Layouts
+### Layouts
 
 Main PyQGIS class [QgsLayoutManager](https://qgis.org/pyqgis/master/core/QgsLayoutManager.html#qgis.core.QgsLayoutManager.layouts)
 
