@@ -36,6 +36,8 @@ After clicking on the Create Reports button the generated files will be availabl
 
 It is possible to customize the CSS style sheet of the HTML by editing the existing CSS variable in the class file (QProjectReport.py)
 
+![image](https://user-images.githubusercontent.com/4746157/211212255-86c0924b-4eda-4f64-bdb1-07c8438db6a7.png)
+
 ![image](https://user-images.githubusercontent.com/4746157/211209086-a60984cf-5bb9-4415-9977-aa919f83f567.png)
 
 ## Information about QGIS objects
