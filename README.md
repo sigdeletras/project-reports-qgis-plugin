@@ -84,3 +84,9 @@ Main PyQGIS class [QgsLayoutManager](https://qgis.org/pyqgis/master/core/QgsLayo
 - **layout_type**: Master layout type (PrintLayout or Report)
 - **atlas**: Is an Atlas? (True/False)
 - **atlas_coverageLayer_name**: Coverage layer name used for the atlas features.
+
+### Contributing
+
+For collaborations and contributions, you can follow this [good practice guide](https://github.com/firstcontributions/first-contributions)
+
+
