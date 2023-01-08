@@ -1,12 +1,17 @@
 # Project reports
 
-QGIS plugin to generate reports of properties and metadata about layers, fields and layouts of QGIS projects in different formats.
+QGIS plugin to generate reports (CSV and HTML) of properties and metadata about layers, fields and layouts of QGIS projects.
+
+## Description
+
+This plugin collects information and properties from different PyQGIS objects, such as layers, fields or layouts accessible from the project and generates open data files (CSV and HTML) with this information. The main objective is to have a tool to generate final reports on work done with QGIS.
 
 ## Outputs
 
 - CVS
+- HMTL (with CSS)
 
-## Object information
+## QGIS Object information
 
 ## Project
 
@@ -40,11 +45,9 @@ Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsFields.htm
 - "field_name": Field name
 - "display_name": The name to use when displaying this field
 - "alias": The alias for the field (the friendly displayed name of the field ), or an empty string if there is no alias.
-- "comment": Field comment
 - "type_name": Field variant type
 - "type": Field type (e.g., char, varchar, text, int, serial, double).
 - "length": Field length
-- "precision": Field precision
 
 ## Layouts
 
