@@ -6,12 +6,34 @@ QGIS plugin to generate reports (CSV and HTML) of properties and metadata about 
 
 This plugin collects information and properties from different PyQGIS objects, such as layers, fields or layouts accessible from the project and generates open data files (CSV and HTML) with this information. The main objective is to have a tool to generate final reports on work done with QGIS.
 
+## Install
+
+Project reports QGIS Plugin is available in QGIS Official Plugin Repository. For install just open QGIS, select Plugins -> Manage and Install Plugins and search for the plugin.
+
+In case of manual installation, you can clone this repository latest release, unzip it into zip directory and enable plugin under QGIS Installed Plugins.
+
+## Usage
+
+After installing the plugin it will be accessible from the Plugin menu and in the toolbar via a shortcut.
+
+When clicking on the tool, a side panel will appear with the different options of the plugin:
+
+- Output directory
+- Output options (CSV and HTML)
+- Report objects.
+
+![image](https://user-images.githubusercontent.com/4746157/211208664-d3b716d4-957d-42e4-8666-7b08f23b88b8.png)
+
+After clicking on the Create Reports button the generated files will be available in the indicated directory.
+
 ## Outputs
 
 - CVS
 - HMTL (with CSS)
 
-## QGIS Object information
+It is possible to customize the CSS style sheet of the HTML by editing the existing CSS variable in the file
+
+## Information about QGIS objects
 
 ## Project
 
