@@ -44,7 +44,7 @@ It is possible to customize the CSS style sheet of the HTML by editing the exist
 
 Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsProject.html#module-QgsProject)
 
-- 'title: The project's title
+- **title**: The project's title
 - 'fileName': The project's file name.
 - 'homePath': The project's home path
 - 'crs': Project's native coordinate reference system.
