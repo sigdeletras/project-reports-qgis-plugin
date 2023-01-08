@@ -54,7 +54,7 @@ Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsProject.ht
 
 ### Layers
 
-Main PyQGIS class [QgsVectorLayer]([https://qgis.org/pyqgis/master/core/QgsProject.html#module-QgsProject](https://qgis.org/pyqgis/master/core/QgsVectorLayer.html#module-QgsVectorLayer)) and [QgsRasterLayer](https://qgis.org/pyqgis/master/core/QgsRasterLayer.html#module-QgsRasterLayer))
+Main PyQGIS class [QgsVectorLayer](https://qgis.org/pyqgis/master/core/QgsVectorLayer.html#module-QgsVectorLayer)) and [QgsRasterLayer](https://qgis.org/pyqgis/master/core/QgsRasterLayer.html#module-QgsRasterLayer))
 
 - **name**: The display name of the layer
 - **crs**: Layer's spatial reference system.
@@ -66,7 +66,7 @@ Main PyQGIS class [QgsVectorLayer]([https://qgis.org/pyqgis/master/core/QgsProje
 - 
 ### Fields
 
-Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsFields.html#module-QgsFields)
+Main PyQGIS class [QgsFields](https://qgis.org/pyqgis/master/core/QgsFields.html#module-QgsFields)
 
 - **layer**: Layer name.
 - **field_name**: Field name
