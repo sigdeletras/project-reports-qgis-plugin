@@ -8,7 +8,7 @@ This plugin collects information and properties from different PyQGIS objects, s
 
 ## Outputs
 
-- CVS
+- CVS (semicolon delimited)
 - HMTL (with CSS)
 
 ## QGIS Object information
