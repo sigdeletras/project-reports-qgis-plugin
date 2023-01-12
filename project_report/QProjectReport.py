@@ -52,8 +52,13 @@ html,body {
       }
       td {
         word-break: break-word;
-        max-width: 30em;
+        max-width: 15em;
         border-top: 0.5px solid;
+      }
+      footer {
+        font-size: x-small;
+        padding-top: 1em;
+        text-align: right;
       }
     </style>"""
 
@@ -77,13 +82,14 @@ def get_url(layer_object):
     return path_url
 
 
-def create_table(title, headers, data):
+def create_table(title, headers, data, single_row=False):
     """Creates an HTML table from a list of headers and a list of data rows.
 
     Parameters:
     title (str): a string for the title
     headers (list): a list of strings representing the table headers
     data (list): a list of lists representing the table rows, where each inner list contains the cells for a single row
+    single_row (bool, optional): a flag indicating whether the data should be formatted in a single row (default: False)
 
     Returns:
     str: an HTML string representing the table
@@ -98,11 +104,17 @@ def create_table(title, headers, data):
 
     table_html.append("<tbody>")
 
-    for row in data:
+    if single_row:
         table_html.append("<tr>")
-        for cell in row:
+        for cell in data:
             table_html.append("<td>{}</td>".format(cell))
         table_html.append("</tr>")
+    else:
+        for row in data:
+            table_html.append("<tr>")
+            for cell in row:
+                table_html.append("<td>{}</td>".format(cell))
+            table_html.append("</tr>")
     table_html.append("</tbody>")
 
     return "<div><h2>{}</h2><table>{}</table></div>".format(title, "\n".join(table_html))
@@ -140,7 +152,7 @@ class QProjectReport:
                                      ]
         self.project_file_path = os.path.split(self.qgsproject.fileName())[0]
         self.project_file_name = os.path.split(self.qgsproject.fileName())[1]
-        self.project_data = [[
+        self.project_data = [
             self.qgsproject.title(),
             self.project_file_name,
             self.project_file_path,
@@ -148,7 +160,7 @@ class QProjectReport:
             self.qgsproject.count(),
             self.qgsproject.metadata().creationDateTime().date().toString("yyyy-MM-dd"),
             self.qgsproject.lastSaveDateTime().date().toString("yyyy-MM-dd")
-        ]]
+        ]
 
         # Layers
         self.layers = self.qgsproject.mapLayers().values()
@@ -156,6 +168,7 @@ class QProjectReport:
         self.layers_column_names = ['id',
                                     'name',
                                     'storage',
+                                    'comment',
                                     'path_url',
                                     'crs',
                                     'encoding',
@@ -171,11 +184,13 @@ class QProjectReport:
         self.layer_fields_data = []
 
         for index, layer in enumerate(self.layers, start=1):
+            provider = layer.dataProvider()
 
             layer_type = 1 if isinstance(layer, QgsVectorLayer) else 0
             layer_name = layer.name()
             crs = layer.crs().authid()
             # path_url = layer.source() if layer_type == 1 else layer.source().split('url=')[1]
+            comment = provider.dataComment()
             path_url = get_url(layer)
             layer_storage = layer.dataProvider().storageType() if layer_type == 1 else layer.providerType()
             encoding = layer.dataProvider().encoding() if layer_type == 1 else ''
@@ -184,7 +199,8 @@ class QProjectReport:
             # creationDate = ''
             # lastSaveDate = ''
 
-            self.layers_data.append([index, layer_name, layer_storage,  path_url, crs, encoding, geometry, features])
+            self.layers_data.append(
+                [index, layer_name, layer_storage, comment, path_url, crs, encoding, geometry, features])
 
             if isinstance(layer, QgsVectorLayer):
                 for index, field in enumerate(layer.fields(), start=1):
@@ -235,53 +251,33 @@ class QProjectReport:
         else:
             print("Directory '% s' already exists" % self.report_directory)
 
-    def createCSVProject(self):
-        """Creating CSV file with properties and info about the QGIS project"""
+    def create_csv_file(self, file_name, column_names, data, single_row=False):
+        """
+        Creates a CSV file with the given file name, column names, and data.
 
-        csv_file = os.path.join(self.report_directory, self.csv_directory, '01_project.csv')
+        Parameters:
+            - file_name (str): The name of the file to be created, without the file extension.
+            - column_names (list): A list of strings representing the names of the columns in the CSV file.
+            - data (list): A list of data to be written to the file.
+            - single_row (bool): A boolean value indicating whether the data should be written as a single row
+            or multiple rows. Default is False.
 
-        with open(csv_file, mode='w', newline='') as csv_file:
+        Returns:
+            None
+        """
+
+        csv_file = os.path.join(self.report_directory, self.csv_directory, file_name + '.csv')
+
+        with open(csv_file, mode='w', newline='', encoding='utf-8') as csv_file:
             writer = csv.writer(csv_file, delimiter=';',
                                 quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(self.project_column_names)
-            writer.writerow(self.project_data)
-            print("CSV project file  created")
+            writer.writerow(column_names)
+            if single_row:
+                writer.writerow(data)
+            else:
+                writer.writerows(data)
 
-    def createCSVLayers(self):
-        """Create CSV file with properties and info about the QGIS project's layers"""
-
-        csv_file = os.path.join(self.report_directory, self.csv_directory, '02_layers.csv')
-
-        with open(csv_file, mode='w', newline='') as csv_file:
-            writer = csv.writer(csv_file, delimiter=';',
-                                quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(self.layers_column_names)
-            writer.writerows(self.layers_data)
-            print("CSV QGIS project's layers  created")
-
-    def createCSVLayerFields(self):
-        """Create CSV file with properties about the vector layers fields"""
-
-        csv_file = os.path.join(self.report_directory, self.csv_directory, '03_fields.csv')
-
-        with open(csv_file, mode='w', newline='') as csv_file:
-            writer = csv.writer(csv_file, delimiter=';',
-                                quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(self.layer_fields_column_names)
-            writer.writerows(self.layer_fields_data)
-            print("CSV vector layers fields created")
-
-    def createCSVLayouts(self):
-        """Create CSV file with properties about the layouts"""
-
-        csv_file = os.path.join(self.report_directory, self.csv_directory, '04_layouts.csv')
-
-        with open(csv_file, mode='w', newline='') as csv_file:
-            writer = csv.writer(csv_file, delimiter=';',
-                                quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(self.layouts_column_names)
-            writer.writerows(self.layouts_data)
-            print("CSV layouts created")
+            print(f"{file_name}.csv created")
 
     def create_html(self, check_objets):
         """Create HTML report file"""
@@ -292,14 +288,14 @@ class QProjectReport:
         self.check_layouts = check_objets[3]
 
         html_file = os.path.join(self.report_directory, self.html_directory, 'project_report.html')
-        html_title = self.project_data[0][0]
+        html_title = self.project_data[0]
         html_string = """<html>
                         <head>{}</head>
                         <body>
                         <h1>QGIS Project Report <i>"{}"</i></h1>""".format(CSS, html_title)
 
         if self.check_project:
-            html_string += create_table('Project', self.project_column_names, self.project_data)
+            html_string += create_table('Project', self.project_column_names, self.project_data, True)
 
         if self.check_layers:
             html_string += create_table('Layers', self.layers_column_names, self.layers_data)
@@ -309,6 +305,9 @@ class QProjectReport:
 
         if self.check_layouts:
             html_string += create_table('Layouts', self.layouts_column_names, self.layouts_data)
+
+        html_string += """<footer> <p>Generated with "Project Reports" QGIS plugin by Patricio Soriano <a 
+        href="https://sigdeletras.com/">@SIGdeletras</a></p> </footer> """
 
         html_string += "</body></html>"
 

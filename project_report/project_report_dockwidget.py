@@ -117,16 +117,28 @@ class ProjectReportDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.project.scaffolding()
 
         if self.check_project.isChecked() and self.check_csv.isChecked():
-            self.project.createCSVProject()
+            csv_file_name = '01_project'
+            csv_column_names = self.project.project_column_names
+            csv_rows = self.project.project_data
+            self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows, True)
 
         if self.check_layers.isChecked() and self.check_csv.isChecked():
-            self.project.createCSVLayers()
+            csv_file_name = '02_layers'
+            csv_column_names = self.project.layers_column_names
+            csv_rows = self.project.layers_data
+            self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
 
         if self.check_fields.isChecked() and self.check_csv.isChecked():
-            self.project.createCSVLayerFields()
+            csv_file_name = '03_fields'
+            csv_column_names = self.project.layer_fields_column_names
+            csv_rows = self.project.layer_fields_data
+            self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
 
         if self.check_layouts.isChecked() and self.check_csv.isChecked():
-            self.project.createCSVLayouts()
+            csv_file_name = '04_layouts'
+            csv_column_names = self.project.layouts_column_names
+            csv_rows = self.project.layouts_data
+            self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
 
         if self.check_html.isChecked():
             self.project.create_html(self.options_objets)
@@ -164,9 +176,8 @@ class ProjectReportDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if self.options_objets == any_check_objets or self.options_outputs == any_check_outputs \
                 or self.folder_path == '':
             self.btnCreateReport.setEnabled(False)
-            self.lb_info.setText('The output directory and at least one object and one type of output must be indicated')
+            self.lb_info.setText(
+                'The output directory and at least one object and one type of output must be indicated')
         else:
             self.lb_info.setText('')
             self.btnCreateReport.setEnabled(True)
-
-
