@@ -120,6 +120,25 @@ def create_table(title, headers, data, single_row=False):
     return "<div><h2>{}</h2><table>{}</table></div>".format(title, "\n".join(table_html))
 
 
+def remove_outputfolders(main_directory):
+    """Remove all files and subfolders within a given folder, then remove the folder itself.
+
+    Parameters:
+    main_directory (str): the path to the folder to be removed
+    """
+    try:
+        for root, dirs, files in os.walk(main_directory, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+            os.rmdir(main_directory)
+    except OSError as e:
+        print(f"An error occurred: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
 class QProjectReport:
     """ Class with information and properties of QGIS projects and their objects (layers, fields and layouts)
     and generation of output files."""
@@ -138,7 +157,8 @@ class QProjectReport:
         self.qgsproject = qgsproject
         self.folder = output_directory
         self.project_name = (self.qgsproject.fileName().split('/')[-1]).split('.')[0]
-        self.report_directory = os.path.join(self.folder, self.project_name) if self.project_name else os.path.join(self.folder, 'untitled_project')
+        self.report_directory = os.path.join(self.folder, self.project_name) if self.project_name else os.path.join(
+            self.folder, 'untitled_project')
         self.csv_directory = os.path.join(self.report_directory, 'csv')
         self.html_directory = os.path.join(self.report_directory, 'html')
 
@@ -249,6 +269,10 @@ class QProjectReport:
             os.mkdir(self.html_directory)
             print("Directory '% s' created" % self.report_directory)
         else:
+            remove_outputfolders(self.csv_directory)
+            remove_outputfolders(self.html_directory)
+            os.mkdir(self.csv_directory)
+            os.mkdir(self.html_directory)
             print("Directory '% s' already exists" % self.report_directory)
 
     def create_csv_file(self, file_name, column_names, data, single_row=False):

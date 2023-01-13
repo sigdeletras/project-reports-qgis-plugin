@@ -100,17 +100,17 @@ class ProjectReportDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             reply = QMessageBox.question(self.iface.mainWindow(), 'Folder already exists',
                                          'The report folder <b>%s</b> already exists for this project.<br> '
                                          'If you continue, '
-                                         '<b>all your content will be deleted</b>.<br> '
+                                         '<b>all the contents in CSV and HTML folders will be deleted</b>.<br> '
                                          'Do you want to continue?' % self.project.report_directory,
                                          QMessageBox.Yes, QMessageBox.No)
             if reply == QMessageBox.Yes:
                 reply2 = QMessageBox.question(self.iface.mainWindow(), 'Folder already exists',
                                              'Are you absolutely sure you want '
-                                             'to delete the folder <b>%s</b> '
-                                             'and <b>ALL</b> the content?' % self.project.report_directory,
+                                             'to delete <b>ALL</b> the content in the CSV and HTML folders'
+                                             'in <b>%s</b>?' % self.project.report_directory,
                                              QMessageBox.Yes, QMessageBox.No)
                 if reply2 == QMessageBox.Yes:
-                    shutil.rmtree(self.project.report_directory)
+                    # shutil.rmtree(self.project.report_directory)
                     self.create_reports()
             else:
                 pass
