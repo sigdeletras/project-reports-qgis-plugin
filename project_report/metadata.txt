@@ -19,7 +19,7 @@ repository=https://github.com/sigdeletras/project-reports-qgis-plugin
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-changelog=2023/01/12 1.1 Fixing error in project csv file. Improved  class methods. Added 'comment' information about layer.
+changelog=2023/01/12 1.1 Fixing error in project csv file. Added More warnings about if the destination folder exists. Improved  class methods. Added 'comment' information about layer.
     2023/01/08 1.0 HTML output option. Check the options selected in the GUI and update the state of the "Create Report" button.
     2023/01/06 0.1 Initial release
 

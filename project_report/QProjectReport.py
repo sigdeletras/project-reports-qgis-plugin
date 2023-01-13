@@ -138,7 +138,7 @@ class QProjectReport:
         self.qgsproject = qgsproject
         self.folder = output_directory
         self.project_name = (self.qgsproject.fileName().split('/')[-1]).split('.')[0]
-        self.report_directory = os.path.join(self.folder, self.project_name)
+        self.report_directory = os.path.join(self.folder, self.project_name) if self.project_name else os.path.join(self.folder, 'untitled_project')
         self.csv_directory = os.path.join(self.report_directory, 'csv')
         self.html_directory = os.path.join(self.report_directory, 'html')
 
