@@ -117,7 +117,7 @@ def create_table(title, headers, data, single_row=False):
             table_html.append("</tr>")
     table_html.append("</tbody>")
 
-    return "<div><h2>{}</h2><table>{}</table></div>".format(title, "\n".join(table_html))
+    return "<div>{}<table>{}</table></div>".format(title, "\n".join(table_html))
 
 
 def remove_outputfolders(main_directory):
@@ -163,12 +163,12 @@ class QProjectReport:
         self.html_directory = os.path.join(self.report_directory, 'html')
 
         self.project_column_names = ['title',
-                                     'fileName',
-                                     'filePath',
-                                     'crs',
+                                     'file_name',
+                                     'file_path',
+                                     'crs_project',
                                      'layers_count',
-                                     'creationDate',
-                                     'lastSaveDate'
+                                     'creation_date',
+                                     'last_save_date'
                                      ]
         self.project_file_path = os.path.split(self.qgsproject.fileName())[0]
         self.project_file_name = os.path.split(self.qgsproject.fileName())[1]
@@ -176,54 +176,99 @@ class QProjectReport:
             self.qgsproject.title(),
             self.project_file_name,
             self.project_file_path,
-            self.qgsproject.crs().authid(),
+            f'{self.qgsproject.crs().authid()} {self.qgsproject.crs().description()}',
             self.qgsproject.count(),
             self.qgsproject.metadata().creationDateTime().date().toString("yyyy-MM-dd"),
             self.qgsproject.lastSaveDateTime().date().toString("yyyy-MM-dd")
         ]
 
+        ## Relations
+
+        self.project_relations_column_names = ['name',
+                                               'referenced_layer',
+                                               'referencing_layer',
+                                               'field_pairs'
+                                               ]
+        self.project_relations_data = []
+
+        self.relations = self.qgsproject.relationManager().relations()
+
+        for k, v in self.relations.items():
+            name = v.name() # Returns a human readable name for this relation.
+            ## print(v.referencedFields()) # Returns a list of attributes used to form the referenced fields (most likely primary key) on the referenced (parent) layer.
+            referencedLayer = v.referencedLayer().name() # Access the referenced (parent) layer
+            ## print(v.referencingFields()) # Returns a list of attributes used to form the referencing fields (foreign key) on the referencing (child) layer.
+            referencingLayer = v.referencingLayer().name() # Access the referencing (child) layer
+            fieldPairs = v.fieldPairs()
+            ## print(v.strength()) # Returns the relation strength as a string
+            ## print(v.type()) # Returns the type of the relation
+
+            self.project_relations_data.append([name, referencedLayer, referencingLayer, fieldPairs])
+
         # Layers
         self.layers = self.qgsproject.mapLayers().values()
 
-        self.layers_column_names = ['id',
-                                    'name',
-                                    'storage',
-                                    'comment',
-                                    'path_url',
-                                    'crs',
-                                    'encoding',
-                                    'geometry_type',
-                                    'features_count',
-                                    ]
+        self.vector_layers_column_names = ['id',
+                                           'name',
+                                           'storage',
+                                           # 'comment',
+                                           'metadata_abstract',
+                                           'path_url',
+                                           'crs_layer',
+                                           'encoding',
+                                           'geometry_type',
+                                           'features_count',
+                                           'joins'
+                                           ]
 
-        self.layers_data = []
+        self.vector_layers_data = []
+
+        self.raster_layers_column_names = ['id',
+                                           'name',
+                                           'storage',
+                                           # 'comment',
+                                           'metadata_abstract',
+                                           'path_url',
+                                           'crs_layer',
+                                           ]
+
+        self.raster_layers_data = []
 
         # Fields
-        self.layer_fields_column_names = ["id", "layer", "field_name", "display_name", "alias", "type_name",
+        self.layer_fields_column_names = ["id", "layer_id", "layer", "field_name", "display_name", "alias", "type_name",
                                           "type", "length"]
         self.layer_fields_data = []
 
+        # Joins
+        self.layer_joins_column_names = ["id", "layer_id", "layer", "join_layer", "join_field_name", "target_field_name"]
+        self.layer_joins_data = []
+
         for index, layer in enumerate(self.layers, start=1):
             provider = layer.dataProvider()
+            metadata = layer.metadata()
 
             layer_type = 1 if isinstance(layer, QgsVectorLayer) else 0
+            layer_index = index
             layer_name = layer.name()
-            crs = layer.crs().authid()
+            crs = f'{layer.crs().authid()} {layer.crs().description()}'
             # path_url = layer.source() if layer_type == 1 else layer.source().split('url=')[1]
-            comment = provider.dataComment()
+            # comment = provider.dataComment()
+            abstract = metadata.abstract()
             path_url = get_url(layer)
             layer_storage = layer.dataProvider().storageType() if layer_type == 1 else layer.providerType()
             encoding = layer.dataProvider().encoding() if layer_type == 1 else ''
             geometry = QgsWkbTypes.geometryDisplayString(layer.geometryType()) if layer_type == 1 else ''
             features = layer.featureCount() if layer_type == 1 else ''
+            joins = len(layer.vectorJoins()) if layer_type == 1 else ''
             # creationDate = ''
             # lastSaveDate = ''
 
-            self.layers_data.append(
-                [index, layer_name, layer_storage, comment, path_url, crs, encoding, geometry, features])
-
             if isinstance(layer, QgsVectorLayer):
-                for index, field in enumerate(layer.fields(), start=1):
+                self.vector_layers_data.append(
+                    [layer_index, layer_name, layer_storage, abstract, path_url, crs, encoding, geometry,
+                     features, joins]) # comment
+
+                for index_field, field in enumerate(layer.fields(), start=1):
                     field_name = field.name()
                     display_name = field.displayName()
                     alias = field.alias()
@@ -233,8 +278,28 @@ class QProjectReport:
                     length = field.length()
                     # precision = field.precision(),
 
-                    self.layer_fields_data.append([index, layer_name, field_name, display_name, alias, type_name,
-                                                   field_type, length])
+                    self.layer_fields_data.append(
+                        [index_field, layer_index, layer_name, field_name, display_name, alias, type_name,
+                         field_type, length])
+
+                ## Joins
+
+                if joins > 0:
+                    vector_joins = layer.vectorJoins()
+                    for index_join, join in enumerate(vector_joins, start=1):
+                        join_layer = vector_joins[index_join - 1].joinLayer().name()
+                        join_fieeld_name = vector_joins[index_join - 1].joinFieldName()
+                        target_field_name = vector_joins[index_join - 1].targetFieldName()
+
+                        self.layer_joins_data.append([index_join, layer_index, layer_name, join_layer,
+                                                      join_fieeld_name, target_field_name])
+
+
+
+
+            else:
+                self.raster_layers_data.append(
+                    [index, layer_name, layer_storage, abstract, path_url, crs]) # comment
 
         # Layouts
         self.layouts = self.qgsproject.layoutManager().layouts()
@@ -256,9 +321,12 @@ class QProjectReport:
 
         # Check
         self.check_project = False
-        self.check_layers = False
+        self.check_vector_layers = False
+        self.check_raster_layers = False
         self.check_layouts = False
         self.check_fields = False
+        self.check_joins = False
+        self.check_relations = False
 
     def scaffolding(self):
         """"Making folders structure"""
@@ -267,13 +335,13 @@ class QProjectReport:
             os.mkdir(self.report_directory)
             os.mkdir(self.csv_directory)
             os.mkdir(self.html_directory)
-            print("Directory '% s' created" % self.report_directory)
+            # print("Directory '% s' created" % self.report_directory)
         else:
             remove_outputfolders(self.csv_directory)
             remove_outputfolders(self.html_directory)
             os.mkdir(self.csv_directory)
             os.mkdir(self.html_directory)
-            print("Directory '% s' already exists" % self.report_directory)
+            # print("Directory '% s' already exists" % self.report_directory)
 
     def create_csv_file(self, file_name, column_names, data, single_row=False):
         """
@@ -301,15 +369,16 @@ class QProjectReport:
             else:
                 writer.writerows(data)
 
-            print(f"{file_name}.csv created")
-
     def create_html(self, check_objets):
         """Create HTML report file"""
 
         self.check_project = check_objets[0]
-        self.check_layers = check_objets[1]
-        self.check_fields = check_objets[2]
-        self.check_layouts = check_objets[3]
+        self.check_vector_layers = check_objets[1]
+        self.check_raster_layers = check_objets[2]
+        self.check_fields = check_objets[3]
+        self.check_layouts = check_objets[4]
+        self.check_joins = check_objets[5]
+        self.check_relations = check_objets[6]
 
         html_file = os.path.join(self.report_directory, self.html_directory, 'project_report.html')
         html_title = self.project_data[0]
@@ -319,16 +388,39 @@ class QProjectReport:
                         <h1>QGIS Project Report <i>"{}"</i></h1>""".format(CSS, html_title)
 
         if self.check_project:
-            html_string += create_table('Project', self.project_column_names, self.project_data, True)
+            html_string += create_table('<h2>Project</h2>', self.project_column_names, self.project_data, True)
 
-        if self.check_layers:
-            html_string += create_table('Layers', self.layers_column_names, self.layers_data)
+        if self.check_raster_layers:
+            html_string += create_table('<h2>Raster layers</h2>', self.raster_layers_column_names, self.raster_layers_data)
+
+        if self.check_vector_layers:
+            html_string += create_table('<h2>Vector layers</h2>', self.vector_layers_column_names, self.vector_layers_data)
+
+        if self.check_relations:
+            html_string += create_table('<h2>Relations</h2>', self.project_relations_column_names, self.project_relations_data)
+
+        if self.check_joins:
+            html_string += """<h2>Vector layers joins</h2>"""
+            for vector_layer in self.vector_layers_data:
+                n_joins = vector_layer[9]
+                if n_joins > 0:
+                    layer_id = vector_layer[0]
+                    layer_name = vector_layer[1]
+                    layer_joins_data_filtered = filter(lambda c: c[1] == layer_id, self.layer_joins_data)
+                    html_string += create_table('<h3><i>Layer: {}</i></h3>'.format(layer_name), self.layer_joins_column_names,
+                                                layer_joins_data_filtered)
 
         if self.check_fields:
-            html_string += create_table('Fields', self.layer_fields_column_names, self.layer_fields_data)
+            html_string += """<h2>Vector layers fields</h2>"""
+            for vector_layer in self.vector_layers_data:
+                layer_id = vector_layer[0]
+                layer_name = vector_layer[1]
+                layer_fields_data_filtered = filter(lambda c: c[1] == layer_id, self.layer_fields_data)
+                html_string += create_table('<h3><i>Layer: {}</i><h3>'.format(layer_name), self.layer_fields_column_names,
+                                            layer_fields_data_filtered)
 
         if self.check_layouts:
-            html_string += create_table('Layouts', self.layouts_column_names, self.layouts_data)
+            html_string += create_table('<h2>Layouts</h2>', self.layouts_column_names, self.layouts_data)
 
         html_string += """<footer> <p>Generated with "Project Reports" QGIS plugin by Patricio Soriano <a 
         href="https://sigdeletras.com/">@SIGdeletras</a></p> </footer> """

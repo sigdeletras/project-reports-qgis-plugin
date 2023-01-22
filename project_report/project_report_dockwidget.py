@@ -64,17 +64,23 @@ class ProjectReportDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.check_html.setChecked(False)
 
         self.check_project.setChecked(False)
-        self.check_layers.setChecked(False)
+        self.check_vector_layers.setChecked(False)
+        self.check_raster_layers.setChecked(False)
         self.check_layouts.setChecked(False)
         self.check_fields.setChecked(False)
+        self.check_joins.setChecked(False)
+        self.check_relations.setChecked(False)
 
         self.check_csv.toggled.connect(self.check_options)
         self.check_html.toggled.connect(self.check_options)
 
         self.check_project.clicked.connect(self.check_options)
-        self.check_layers.toggled.connect(self.check_options)
+        self.check_vector_layers.toggled.connect(self.check_options)
+        self.check_raster_layers.toggled.connect(self.check_options)
         self.check_layouts.toggled.connect(self.check_options)
         self.check_fields.toggled.connect(self.check_options)
+        self.check_joins.clicked.connect(self.check_options)
+        self.check_relations.clicked.connect(self.check_options)
 
         self.options_outputs = [
             self.check_csv.isChecked(),
@@ -83,9 +89,12 @@ class ProjectReportDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         self.options_objets = [
             self.check_project.isChecked(),
-            self.check_layers.isChecked(),
+            self.check_vector_layers.isChecked(),
+            self.check_raster_layers.isChecked(),
             self.check_layouts.isChecked(),
             self.check_fields.isChecked(),
+            self.check_relations.isChecked(),
+            self.check_joins.isChecked(),
         ]
         self.lb_info.setText('The output directory and at least one object and one type of output must be indicated')
 
@@ -128,10 +137,18 @@ class ProjectReportDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             csv_rows = self.project.project_data
             self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows, True)
 
-        if self.check_layers.isChecked() and self.check_csv.isChecked():
-            csv_file_name = '02_layers'
-            csv_column_names = self.project.layers_column_names
-            csv_rows = self.project.layers_data
+        if self.check_vector_layers.isChecked() and self.check_csv.isChecked():
+            csv_file_name = '02_layers_vectorial'
+            csv_column_names = self.project.vector_layers_column_names
+            csv_rows = self.project.vector_layers_data
+
+            self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
+
+        if self.check_raster_layers.isChecked() and self.check_csv.isChecked():
+            csv_file_name = '02_layers_raster'
+            csv_column_names = self.project.raster_layers_column_names
+            csv_rows = self.project.raster_layers_data
+
             self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
 
         if self.check_fields.isChecked() and self.check_csv.isChecked():
@@ -140,17 +157,29 @@ class ProjectReportDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             csv_rows = self.project.layer_fields_data
             self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
 
+        if self.check_relations.isChecked() and self.check_csv.isChecked():
+            csv_file_name = '04_relations'
+            csv_column_names = self.project.project_relations_column_names
+            csv_rows = self.project.project_relations_data
+            self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
+
+        if self.check_joins.isChecked() and self.check_csv.isChecked():
+            csv_file_name = '05_joins'
+            csv_column_names = self.project.layer_joins_column_names
+            csv_rows = self.project.layer_joins_data
+            self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
+
         if self.check_layouts.isChecked() and self.check_csv.isChecked():
-            csv_file_name = '04_layouts'
+            csv_file_name = '06_layouts'
             csv_column_names = self.project.layouts_column_names
             csv_rows = self.project.layouts_data
             self.project.create_csv_file(csv_file_name, csv_column_names, csv_rows)
 
         if self.check_html.isChecked():
             self.project.create_html(self.options_objets)
-
+        output_dir = f'<a href="file:///{self.project.report_directory}">{self.project.report_directory}</a>'
         success_message = '😎 Project reports have been created in <b>%s</b>' % (
-            self.project.report_directory)
+            output_dir)
 
         self.iface.messageBar().pushMessage("Success", success_message, level=Qgis.Success, duration=10)
 
@@ -171,12 +200,15 @@ class ProjectReportDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         self.options_objets = [
             self.check_project.isChecked(),
-            self.check_layers.isChecked(),
+            self.check_vector_layers.isChecked(),
+            self.check_raster_layers.isChecked(),
             self.check_fields.isChecked(),
             self.check_layouts.isChecked(),
+            self.check_joins.isChecked(),
+            self.check_relations.isChecked(),
         ]
 
-        any_check_objets = [False, False, False, False]
+        any_check_objets = [False, False, False, False, False, False, False, False]
         any_check_outputs = [False, False]
 
         if self.options_objets == any_check_objets or self.options_outputs == any_check_outputs \

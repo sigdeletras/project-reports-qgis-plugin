@@ -87,6 +87,12 @@ Main PyQGIS class [QgsLayoutManager](https://qgis.org/pyqgis/master/core/QgsLayo
 - **atlas**: Is an Atlas? (True/False)
 - **atlas_coverageLayer_name**: Coverage layer name used for the atlas features.
 
+### Changelog
+- 2023/01/19 1.2 Added layer metadata abstract. Link to out_folder in message. Added CRS Description. Splitted  fields table's html by layers. Joins' information implemented. Changes in HTML headings for subtables. Relations' information implemented
+- 2023/01/12 1.1 Fixing error in project csv file. Added More warnings about if the destination folder exists. The HTML and CSV subfolders are only deleted if the parent folder already exists.  Improved  class methods. Added 'comment' information about layer.
+- 2023/01/08 1.0 HTML output option. Check the options selected in the GUI and update the state of the "Create Report" button.
+- 2023/01/06 0.1 Initial release
+
 ### Contributing
 
 For collaborations and contributions, you can follow this [good practice guide](https://github.com/firstcontributions/first-contributions)
