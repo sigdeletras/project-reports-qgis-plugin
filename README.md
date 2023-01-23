@@ -1,4 +1,4 @@
-# Project reports
+# Project reports (v.1.2)
 
 QGIS plugin to generate reports (CSV and HTML) of properties and metadata about layers, fields and layouts of QGIS projects.
 
@@ -47,29 +47,45 @@ It is possible to customize the CSS style sheet of the HTML by editing the exist
 Main PyQGIS class [QgsProject](https://qgis.org/pyqgis/master/core/QgsProject.html#module-QgsProject)
 
 - **title**: The project's title
-- **fileName**: The project's file name.
-- **homePath**: The project's home path
-- **crs**: Project's native coordinate reference system.
+- **file_name**: The project's file name.
+- **file_path**: The project's home path
+- **crs_project**: Project's native coordinate reference system.
 - **layers_count**: The number of registered layers
-- **creationDate**: The date when the project was created
-- **lastSaveDate**: The date when the project was last saved
+- **creation_date**: The date when the project was created
+- **last_save_date**: The date when the project was last saved
+
+### Relations
+
+Main PyQGIS class [QgsRelationManager](https://qgis.org/pyqgis/master/core/QgsRelationManager.html)
+
+- **name**: The human readable name for this relation.
+- **referenced_layer**: The referenced (parent) layer.
+- **referencing_layer**: The referencing (child) layer This is the layer which has the field(s) which point to another layer.
+- **field_pairs**: Returns the field pairs which form this relation.
 
 ### Layers
 
 Main PyQGIS class [QgsVectorLayer](https://qgis.org/pyqgis/master/core/QgsVectorLayer.html#module-QgsVectorLayer)) and [QgsRasterLayer](https://qgis.org/pyqgis/master/core/QgsRasterLayer.html#module-QgsRasterLayer))
 
+- **id**: Identification number in the report.
 - **name**: The display name of the layer
-- **crs**: Layer's spatial reference system.
-- **path_url**: URL from the datastorage
 - **storage**: The permanent storage type for this layer as a friendly name.
+- **metadata_abstract**: The metadata summary of the layer (if added in the project).
+- **path_url**: URL from the datastorage
+- **crs_layer**: Layer's spatial reference system.
+
+For the vector layers only:
+
 - **encoding**: The character encoding of the data in the resource. 
 - **geometry_type**: Returns point, line or polygon
 - **features_count**: Number of features rendered with specified legend key.
-- 
+- **joins**: Number of layer joints
 ### Fields
 
 Main PyQGIS class [QgsFields](https://qgis.org/pyqgis/master/core/QgsFields.html#module-QgsFields)
 
+- **id**: Identification number in the report.
+- **layer_id**: Layer identification number in the report.
 - **layer**: Layer name.
 - **field_name**: Field name
 - **display_name**: The name to use when displaying this field
@@ -78,6 +94,16 @@ Main PyQGIS class [QgsFields](https://qgis.org/pyqgis/master/core/QgsFields.html
 - **type**: Field type (e.g., char, varchar, text, int, serial, double).
 - **length**: Field length
 
+### Joins
+
+Main PyQGIS class [QgsVectorLayerJoinInfo](https://qgis.org/pyqgis/master/core/QgsVectorLayerJoinInfo.html#qgis.core.QgsVectorLayerJoinInfo)
+
+- **id**: Identification number in the report.
+- **layer_id**: Layer identification number in the report.
+- **layer**: Layer name.
+- **join_layer**: The Joined layer name
+- **join_field_name**: The name of the field of joined layer that will be used for join
+- **target_field_name**: The name of the field of our layer that will be used for join.
 ### Layouts
 
 Main PyQGIS class [QgsLayoutManager](https://qgis.org/pyqgis/master/core/QgsLayoutManager.html#qgis.core.QgsLayoutManager.layouts)
